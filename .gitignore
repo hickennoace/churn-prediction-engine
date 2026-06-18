@@ -68,6 +68,8 @@ data/external/
 !data/**/*.example.csv
 # Power BI dashboard marts are small aggregates — track them so the .pbip works on clone.
 !powerbi/**/data/*.csv
+# Power BI local/machine-specific cache (not part of the shared project)
+**/.pbi/
 
 # Trained ML models / pickles
 models/
