@@ -1,5 +1,5 @@
 {
-  "config": "{\"version\": \"5.43\", \"activeSectionIndex\": 0, \"defaultDrillFilterOtherVisuals\": true, \"settings\": {\"useStylableVisualContainerHeader\": true}}",
+  "config": "{\"version\": \"5.43\", \"activeSectionIndex\": 0, \"defaultDrillFilterOtherVisuals\": true, \"settings\": {\"useStylableVisualContainerHeader\": true}, \"themeCollection\": {\"baseTheme\": {\"name\": \"CY24SU10\"}}}",
   "layoutOptimization": 0,
   "publicCustomVisuals": [],
   "resourcePackages": [],
