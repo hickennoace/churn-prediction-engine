@@ -55,13 +55,14 @@ churn-prediction-engine/
 - [x] `src/ingestion/load_raw.py` rewritten for the multi-file dataset: loads **verbatim** (all `TEXT`) into 3 staging tables via PostgreSQL `COPY`, with a `_source_file` provenance column. Tables: `raw_members`, `raw_transactions`, `raw_train`.
 - [x] Sanity check passed — DB row counts match source exactly: `raw_members`=6,769,473 · `raw_transactions`=22,978,755 · `raw_train`=1,963,891.
 
-### Phase 2: Data Cleaning & ETL — `[ ] Pending`
-- [ ] Profile data: nulls, duplicates, type mismatches, outliers.
-- [ ] Handle missing values (documented strategy per column).
-- [ ] Normalize/parse dates to a consistent `DATE`/`TIMESTAMP` standard.
-- [ ] Split into a clean relational schema: **`customers`** (one row per customer) vs **`transactions`** (one row per billing event) with FK relationship.
-- [ ] Add constraints, primary/foreign keys, and indexes.
-- [ ] Load cleaned tables into PostgreSQL; persist intermediate output to `data/processed/`.
+### Phase 2: Data Cleaning & ETL — `[x] Complete`
+> Full methodology + evidence in [`docs/data-cleaning.md`](docs/data-cleaning.md).
+- [x] Profiled raw data (nulls, dupes, type/outlier issues) — e.g. 67% garbage ages, 65% missing gender, epoch/2036 junk expiry dates, 881,701 label overlap.
+- [x] Missing-value strategy (documented per column): age out of 1–100 → NULL; gender empty → NULL (kept as "unknown"); bad expiry → NULL + `expire_date_valid` flag.
+- [x] Dates parsed `YYYYMMDD` → `DATE` (`to_date`).
+- [x] Clean relational schema built via set-based SQL (`src/etl/clean.py`): **`customers`** (one row per `msno`, PK) + **`transactions`** (one row per billing event) with FK.
+- [x] Constraints/keys/indexes: `customers` PK; `transactions` FK→customers + indexes on `msno`, `transaction_date`, `membership_expire_date`.
+- [x] Clean tables in PostgreSQL; `customers` snapshot to `data/processed/customers.parquet` (transactions kept in PG by design). All validation checks PASS.
 
 ### Phase 3: Business Logic & Machine Learning — `[ ] Pending`
 - [ ] **Economic metrics:** compute **CAC**, **LTV**, and **MRR** (define formulas/assumptions explicitly).
@@ -112,3 +113,4 @@ churn-prediction-engine/
 - _Project initialized; repo + `.gitignore` + `CLAUDE.md` created._
 - _Dataset locked in (2026-06-18): **KKBox Churn Prediction Challenge**. Multi-table — Phase 1 loader (`load_raw.py`, currently single-CSV) to be adapted for `members`/`transactions`/`train`. Awaiting user to download `members_v3`, `transactions`(+`v2`), `train`(+`v2`) from Kaggle into `data/raw/`. `user_logs` excluded by scope._
 - _**Phase 1 COMPLETE (2026-06-18).** KKBox CSVs downloaded + extracted; Postgres 16 up via Docker; `load_raw.py` loads 3 verbatim staging tables via `COPY` — row counts verified (6.77M / 22.98M / 1.96M). Ready to begin Phase 2 (cleaning & ETL) on approval._
+- _**Phase 2 COMPLETE (2026-06-18).** Profiled raw data; built clean `customers` (2,426,143) + `transactions` (22,975,416, deduped) via SQL ETL (`src/etl/clean.py`) with PK/FK/indexes; all validation PASS; 970,960 labeled customers @ 8.99% churn. Methodology in `docs/data-cleaning.md`. Decisions: train_v2 canonical label, transacting-customer universe, null+flag dirty values. Ready for Phase 3 (metrics + ML) on approval._
