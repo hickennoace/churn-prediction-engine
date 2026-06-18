@@ -1,0 +1,37 @@
+{
+  "name": "ChurnEngineTheme",
+  "dataColors": ["#3B82F6", "#EF4444", "#10B981", "#F59E0B", "#8B5CF6", "#06B6D4", "#EC4899", "#64748B", "#0EA5E9", "#F97316"],
+  "background": "#FFFFFF",
+  "foreground": "#1E293B",
+  "foregroundNeutralSecondary": "#475569",
+  "foregroundNeutralTertiary": "#94A3B8",
+  "tableAccent": "#3B82F6",
+  "good": "#10B981",
+  "neutral": "#F59E0B",
+  "bad": "#EF4444",
+  "maximum": "#1E3A8A",
+  "minimum": "#DBEAFE",
+  "textClasses": {
+    "title": { "fontSize": 15, "fontFace": "Segoe UI Semibold", "color": "#0F172A" },
+    "header": { "fontSize": 12, "fontFace": "Segoe UI Semibold", "color": "#1E293B" },
+    "callout": { "fontSize": 34, "fontFace": "Segoe UI Light", "color": "#0F172A" },
+    "label": { "fontSize": 10, "fontFace": "Segoe UI", "color": "#475569" }
+  },
+  "visualStyles": {
+    "*": {
+      "*": {
+        "background": [{ "show": true, "color": { "solid": { "color": "#FFFFFF" } }, "transparency": 0 }],
+        "border": [{ "show": true, "color": { "solid": { "color": "#E2E8F0" } }, "radius": 10 }],
+        "dropShadow": [{ "show": true, "color": { "solid": { "color": "#0F172A" } }, "position": "Outer", "preset": "BottomRight", "shadowSpread": 4, "shadowBlur": 10, "transparency": 88 }],
+        "title": [{ "show": true, "fontColor": { "solid": { "color": "#0F172A" } }, "fontSize": 13, "fontFamily": "Segoe UI Semibold", "alignment": "left" }],
+        "visualHeader": [{ "show": false }]
+      }
+    },
+    "card": {
+      "*": {
+        "labels": [{ "color": { "solid": { "color": "#0F172A" } }, "fontSize": 30, "fontFamily": "Segoe UI Light" }],
+        "categoryLabels": [{ "show": true, "color": { "solid": { "color": "#64748B" } }, "fontSize": 10 }]
+      }
+    }
+  }
+}
