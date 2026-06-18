@@ -1,0 +1,179 @@
+{
+  "config": "{\"version\": \"5.43\", \"activeSectionIndex\": 0, \"defaultDrillFilterOtherVisuals\": true, \"settings\": {\"useStylableVisualContainerHeader\": true}}",
+  "layoutOptimization": 0,
+  "publicCustomVisuals": [],
+  "resourcePackages": [],
+  "sections": [
+    {
+      "name": "s1exec",
+      "displayName": "Executive Overview",
+      "filters": "[]",
+      "ordinal": 0,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 20,
+          "z": 0,
+          "width": 290,
+          "height": 120,
+          "config": "{\"name\": \"v001\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 20, \"z\": 0, \"width\": 290, \"height\": 120, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"MRR (NT$)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"metrics\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"MRR (NT$)\"}, \"Name\": \"MRR (NT$)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 330,
+          "y": 20,
+          "z": 0,
+          "width": 290,
+          "height": 120,
+          "config": "{\"name\": \"v002\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 330, \"y\": 20, \"z\": 0, \"width\": 290, \"height\": 120, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"Active Customers\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"metrics\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Active Customers\"}, \"Name\": \"Active Customers\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 640,
+          "y": 20,
+          "z": 0,
+          "width": 290,
+          "height": 120,
+          "config": "{\"name\": \"v003\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 640, \"y\": 20, \"z\": 0, \"width\": 290, \"height\": 120, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"Monthly Churn Rate\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"metrics\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"Monthly Churn Rate\"}, \"Name\": \"Monthly Churn Rate\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 950,
+          "y": 20,
+          "z": 0,
+          "width": 290,
+          "height": 120,
+          "config": "{\"name\": \"v004\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 950, \"y\": 20, \"z\": 0, \"width\": 290, \"height\": 120, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"LTV (NT$)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"metrics\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"LTV (NT$)\"}, \"Name\": \"LTV (NT$)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 160,
+          "z": 0,
+          "width": 760,
+          "height": 320,
+          "config": "{\"name\": \"v005\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 160, \"z\": 0, \"width\": 760, \"height\": 320, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"lineChart\", \"projections\": {\"Category\": [{\"queryRef\": \"mrr_monthly.month\"}], \"Y\": [{\"queryRef\": \"Sum(mrr_monthly.mrr)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"t\", \"Entity\": \"mrr_monthly\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t\"}}, \"Property\": \"month\"}, \"Name\": \"mrr_monthly.month\"}, {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"t\"}}, \"Property\": \"mrr\"}}, \"Function\": 0}, \"Name\": \"Sum(mrr_monthly.mrr)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 800,
+          "y": 160,
+          "z": 0,
+          "width": 440,
+          "height": 320,
+          "config": "{\"name\": \"v006\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 800, \"y\": 160, \"z\": 0, \"width\": 440, \"height\": 320, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"clusteredColumnChart\", \"projections\": {\"Category\": [{\"queryRef\": \"risk_distribution.score_lo\"}], \"Y\": [{\"queryRef\": \"Sum(risk_distribution.customers)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"r\", \"Entity\": \"risk_distribution\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"r\"}}, \"Property\": \"score_lo\"}, \"Name\": \"risk_distribution.score_lo\"}, {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"r\"}}, \"Property\": \"customers\"}}, \"Function\": 0}, \"Name\": \"Sum(risk_distribution.customers)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 500,
+          "z": 0,
+          "width": 380,
+          "height": 120,
+          "config": "{\"name\": \"v007\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 500, \"z\": 0, \"width\": 380, \"height\": 120, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"ARPU (NT$)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"m\", \"Entity\": \"metrics\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"m\"}}, \"Property\": \"ARPU (NT$)\"}, \"Name\": \"ARPU (NT$)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 430,
+          "y": 500,
+          "z": 0,
+          "width": 380,
+          "height": 120,
+          "config": "{\"name\": \"v008\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 430, \"y\": 500, \"z\": 0, \"width\": 380, \"height\": 120, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"Revenue at Risk (NT$/mo)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"rar\", \"Entity\": \"revenue_at_risk\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"rar\"}}, \"Property\": \"Revenue at Risk (NT$/mo)\"}, \"Name\": \"Revenue at Risk (NT$/mo)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 840,
+          "y": 500,
+          "z": 0,
+          "width": 400,
+          "height": 120,
+          "config": "{\"name\": \"v009\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 840, \"y\": 500, \"z\": 0, \"width\": 400, \"height\": 120, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"card\", \"projections\": {\"Values\": [{\"queryRef\": \"High-Risk Customers (80+)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"rd\", \"Entity\": \"risk_distribution\", \"Type\": 0}], \"Select\": [{\"Measure\": {\"Expression\": {\"SourceRef\": {\"Source\": \"rd\"}}, \"Property\": \"High-Risk Customers (80+)\"}, \"Name\": \"High-Risk Customers (80+)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        }
+      ],
+      "config": "{}",
+      "width": 1280,
+      "height": 720,
+      "displayOption": 1
+    },
+    {
+      "name": "s2churn",
+      "displayName": "Churn Analysis",
+      "filters": "[]",
+      "ordinal": 1,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 20,
+          "z": 0,
+          "width": 240,
+          "height": 300,
+          "config": "{\"name\": \"v010\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 20, \"z\": 0, \"width\": 240, \"height\": 300, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"slicer\", \"projections\": {\"Values\": [{\"queryRef\": \"churn_by_segment.segment_type\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"s\", \"Entity\": \"churn_by_segment\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"s\"}}, \"Property\": \"segment_type\"}, \"Name\": \"churn_by_segment.segment_type\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 280,
+          "y": 20,
+          "z": 0,
+          "width": 960,
+          "height": 300,
+          "config": "{\"name\": \"v011\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 280, \"y\": 20, \"z\": 0, \"width\": 960, \"height\": 300, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"clusteredBarChart\", \"projections\": {\"Category\": [{\"queryRef\": \"churn_by_segment.segment\"}], \"Y\": [{\"queryRef\": \"Sum(churn_by_segment.churn_pct)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"s\", \"Entity\": \"churn_by_segment\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"s\"}}, \"Property\": \"segment\"}, \"Name\": \"churn_by_segment.segment\"}, {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"s\"}}, \"Property\": \"churn_pct\"}}, \"Function\": 0}, \"Name\": \"Sum(churn_by_segment.churn_pct)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 340,
+          "z": 0,
+          "width": 1220,
+          "height": 360,
+          "config": "{\"name\": \"v012\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 340, \"z\": 0, \"width\": 1220, \"height\": 360, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"pivotTable\", \"projections\": {\"Rows\": [{\"queryRef\": \"cohort_retention.cohort_month\"}], \"Columns\": [{\"queryRef\": \"cohort_retention.month_offset\"}], \"Values\": [{\"queryRef\": \"Avg(cohort_retention.retention_pct)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"c\", \"Entity\": \"cohort_retention\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"cohort_month\"}, \"Name\": \"cohort_retention.cohort_month\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"month_offset\"}, \"Name\": \"cohort_retention.month_offset\"}, {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"c\"}}, \"Property\": \"retention_pct\"}}, \"Function\": 1}, \"Name\": \"Avg(cohort_retention.retention_pct)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        }
+      ],
+      "config": "{}",
+      "width": 1280,
+      "height": 720,
+      "displayOption": 1
+    },
+    {
+      "name": "s3risk",
+      "displayName": "Risk & Revenue",
+      "filters": "[]",
+      "ordinal": 2,
+      "visualContainers": [
+        {
+          "x": 20,
+          "y": 20,
+          "z": 0,
+          "width": 600,
+          "height": 320,
+          "config": "{\"name\": \"v013\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 20, \"z\": 0, \"width\": 600, \"height\": 320, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"clusteredColumnChart\", \"projections\": {\"Category\": [{\"queryRef\": \"revenue_at_risk.score_lo\"}], \"Y\": [{\"queryRef\": \"Sum(revenue_at_risk.expected_monthly_revenue_at_risk)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"r\", \"Entity\": \"revenue_at_risk\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"r\"}}, \"Property\": \"score_lo\"}, \"Name\": \"revenue_at_risk.score_lo\"}, {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"r\"}}, \"Property\": \"expected_monthly_revenue_at_risk\"}}, \"Function\": 0}, \"Name\": \"Sum(revenue_at_risk.expected_monthly_revenue_at_risk)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 640,
+          "y": 20,
+          "z": 0,
+          "width": 600,
+          "height": 320,
+          "config": "{\"name\": \"v014\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 640, \"y\": 20, \"z\": 0, \"width\": 600, \"height\": 320, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"clusteredColumnChart\", \"projections\": {\"Category\": [{\"queryRef\": \"risk_distribution.score_lo\"}], \"Y\": [{\"queryRef\": \"Sum(risk_distribution.customers)\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"rd\", \"Entity\": \"risk_distribution\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"rd\"}}, \"Property\": \"score_lo\"}, \"Name\": \"risk_distribution.score_lo\"}, {\"Aggregation\": {\"Expression\": {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"rd\"}}, \"Property\": \"customers\"}}, \"Function\": 0}, \"Name\": \"Sum(risk_distribution.customers)\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        },
+        {
+          "x": 20,
+          "y": 360,
+          "z": 0,
+          "width": 1220,
+          "height": 340,
+          "config": "{\"name\": \"v015\", \"layouts\": [{\"id\": 0, \"position\": {\"x\": 20, \"y\": 360, \"z\": 0, \"width\": 1220, \"height\": 340, \"tabOrder\": 0}}], \"singleVisual\": {\"visualType\": \"tableEx\", \"projections\": {\"Values\": [{\"queryRef\": \"high_risk_customers.msno\"}, {\"queryRef\": \"high_risk_customers.risk_score\"}, {\"queryRef\": \"high_risk_customers.churn_prob\"}, {\"queryRef\": \"high_risk_customers.city\"}, {\"queryRef\": \"high_risk_customers.days_to_expiry\"}, {\"queryRef\": \"high_risk_customers.tenure_days\"}, {\"queryRef\": \"high_risk_customers.total_paid\"}]}, \"prototypeQuery\": {\"Version\": 2, \"From\": [{\"Name\": \"h\", \"Entity\": \"high_risk_customers\", \"Type\": 0}], \"Select\": [{\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"h\"}}, \"Property\": \"msno\"}, \"Name\": \"high_risk_customers.msno\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"h\"}}, \"Property\": \"risk_score\"}, \"Name\": \"high_risk_customers.risk_score\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"h\"}}, \"Property\": \"churn_prob\"}, \"Name\": \"high_risk_customers.churn_prob\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"h\"}}, \"Property\": \"city\"}, \"Name\": \"high_risk_customers.city\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"h\"}}, \"Property\": \"days_to_expiry\"}, \"Name\": \"high_risk_customers.days_to_expiry\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"h\"}}, \"Property\": \"tenure_days\"}, \"Name\": \"high_risk_customers.tenure_days\"}, {\"Column\": {\"Expression\": {\"SourceRef\": {\"Source\": \"h\"}}, \"Property\": \"total_paid\"}, \"Name\": \"high_risk_customers.total_paid\"}]}, \"drillFilterOtherVisuals\": true}}",
+          "filters": "[]"
+        }
+      ],
+      "config": "{}",
+      "width": 1280,
+      "height": 720,
+      "displayOption": 1
+    }
+  ]
+}

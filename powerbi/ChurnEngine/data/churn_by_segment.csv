@@ -1,0 +1,37 @@
+segment_type,segment,labeled,churned,churn_pct
+auto_renew,mostly auto-renew,851350,42284,4.97
+auto_renew,mostly manual,117086,43666,37.29
+city,1,441368,27724,6.28
+city,10,6458,852,13.19
+city,11,9122,1085,11.89
+city,12,11349,1561,13.75
+city,13,96994,11867,12.23
+city,14,19965,2338,11.71
+city,15,43115,5487,12.73
+city,16,943,104,11.03
+city,17,5469,566,10.35
+city,18,7773,903,11.62
+city,19,139,16,11.51
+city,20,677,72,10.64
+city,21,5180,752,14.52
+city,22,41887,5217,12.45
+city,3,5045,664,13.16
+city,4,47136,6038,12.81
+city,5,70592,9249,13.1
+city,6,26007,3318,12.76
+city,7,2647,292,11.03
+city,8,7565,1007,13.31
+city,9,9507,1190,12.52
+city,,109498,5648,5.16
+gender,female,183923,23655,12.86
+gender,male,204130,26121,12.8
+gender,unknown,580383,36174,6.23
+plan_length,1-monthly,915587,60174,6.57
+plan_length,2-quarterly,33952,11776,34.68
+plan_length,3-long-term,18897,14000,74.09
+registered_via,13,3341,309,9.25
+registered_via,3,106165,18132,17.08
+registered_via,4,52288,11841,22.65
+registered_via,7,462177,20651,4.47
+registered_via,9,234967,29369,12.5
+registered_via,,109498,5648,5.16

@@ -79,10 +79,11 @@ churn-prediction-engine/
 - [x] Pydantic DTOs (`src/api/schemas.py`); pagination (`limit`/`offset`/`min_score`); 404 + 422 + 503 handling. CAC handled per **Option A** (`/metrics?cac=` → LTV:CAC, no fabricated value).
 - [x] OpenAPI/Swagger at `/docs` + `/openapi.json` (verified 200). All endpoints tested live.
 
-### Phase 5: BI Preparation — `[ ] Pending`
-- [ ] Author advanced **SQL** in `sql/` using **CTEs and window functions** (cohort retention, rolling MRR, churn-by-segment, risk distribution).
-- [ ] Create reporting views optimized for Excel/PowerBI consumption.
-- [ ] Document the connection path (direct DB view vs. via API) for the BI tools.
+### Phase 5: BI Preparation — `[x] Complete`
+- [x] Advanced **SQL** in `sql/` (CTEs + window functions): `v_subscription_coverage` (LEAD), `mv_mrr_monthly`/`v_mrr_monthly` (LAG growth), `mv_cohort_retention`/`v_cohort_retention`, `v_churn_by_segment`, `v_risk_distribution` (SUM OVER), `v_revenue_at_risk`.
+- [x] Reporting views + `src/analytics/build_bi.py` exports 7 marts to `powerbi/ChurnEngine/data/*.csv`.
+- [x] **Power BI `.pbip` project** in `powerbi/ChurnEngine/` (semantic model + DAX measures + 3-page report) — see `powerbi/README.md`. BI tools connect via these views (direct) or the API.
+- _Key insights surfaced: MRR NT$80M→279M; manual-pay churn 37.3% vs auto-renew 5.0%; top risk band = NT$13.8M/mo revenue at risk._
 
 ### Phase 6: Showcase & Portfolio Presentation — `[ ] Pending`
 > The deliverable that gets seen. For a **data/business/financial analyst** target role,
@@ -117,3 +118,4 @@ churn-prediction-engine/
 - _**Phase 2 COMPLETE (2026-06-18).** Profiled raw data; built clean `customers` (2,426,143) + `transactions` (22,975,416, deduped) via SQL ETL (`src/etl/clean.py`) with PK/FK/indexes; all validation PASS; 970,960 labeled customers @ 8.99% churn. Methodology in `docs/data-cleaning.md`. Decisions: train_v2 canonical label, transacting-customer universe, null+flag dirty values. Ready for Phase 3 (metrics + ML) on approval._
 - _**Phase 3 COMPLETE (2026-06-18).** Leak-free as-of cutoff 2017-02-28 (predict March-2017 expiry cohort). Metrics: MRR NT$147.6M/mo, ARPU NT$128, LTV NT$1,424. Features `customer_features` (2,391,675×27). Random Forest (ROC-AUC 0.907, PR-AUC 0.629), isotonic-calibrated; well-calibrated 1-100 score (band 1→2.2%, band 10→94.8% actual churn) written to `customer_risk_scores`. Docs: `docs/phase3-metrics-and-model.md`._
 - _**Phase 4 COMPLETE (2026-06-18).** FastAPI read-only API (`src/api/`): `/metrics` (+`?cac=` for LTV:CAC, Option A chosen), `/customers/high-risk` (paginated), `/customer?msno=`, `/health`, Swagger `/docs`. Service-layer isolates DB; Pydantic DTOs; 404/422/503 handled. Persisted `business_metrics` table + `ix_risk_score` index for fast serving. All endpoints tested live. Ready for Phase 5 (BI SQL) on approval._
+- _**Phase 5 COMPLETE (2026-06-18).** BI SQL (`sql/00-04`, CTEs + LEAD/LAG/SUM-OVER window funcs) → views/matviews; `src/analytics/build_bi.py` exports 7 CSV marts. **Power BI `.pbip`** authored in `powerbi/ChurnEngine/` (model.bim + DAX measures + 3-page report.json: Executive Overview, Churn Analysis, Risk & Revenue) — NOT yet test-opened in Desktop (report visuals may need a fix-up pass; model/data solid). User has AWS free tier + wants AWS (deferred to a future Phase 7: RDS serving marts + S3 + dashboard, free-tier-safe). NEXT: user to open the .pbip & report any errors; then Phase 6 (showcase/README) and/or Phase 7 (AWS)._

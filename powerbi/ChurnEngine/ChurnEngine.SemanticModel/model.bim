@@ -1,0 +1,234 @@
+{
+  "name": "ChurnEngine",
+  "compatibilityLevel": 1567,
+  "model": {
+    "culture": "en-US",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "sourceQueryCulture": "en-US",
+    "dataAccessOptions": {
+      "legacyRedirects": true,
+      "returnErrorValuesAsNull": true
+    },
+    "tables": [
+      {
+        "name": "metrics",
+        "columns": [
+          { "name": "as_of_date", "dataType": "dateTime", "sourceColumn": "as_of_date", "formatString": "yyyy-mm-dd", "summarizeBy": "none" },
+          { "name": "active_customers", "dataType": "int64", "sourceColumn": "active_customers", "summarizeBy": "none" },
+          { "name": "mrr", "dataType": "double", "sourceColumn": "mrr", "summarizeBy": "sum" },
+          { "name": "arpu", "dataType": "double", "sourceColumn": "arpu", "summarizeBy": "sum" },
+          { "name": "monthly_churn_rate", "dataType": "double", "sourceColumn": "monthly_churn_rate", "summarizeBy": "sum" },
+          { "name": "avg_lifetime_months", "dataType": "double", "sourceColumn": "avg_lifetime_months", "summarizeBy": "sum" },
+          { "name": "ltv", "dataType": "double", "sourceColumn": "ltv", "summarizeBy": "sum" },
+          { "name": "arr", "dataType": "double", "sourceColumn": "arr", "summarizeBy": "sum" },
+          { "name": "computed_at", "dataType": "dateTime", "sourceColumn": "computed_at", "summarizeBy": "none" }
+        ],
+        "measures": [
+          { "name": "MRR (NT$)", "expression": "SUM(metrics[mrr])", "formatString": "\"NT$\" #,0" },
+          { "name": "ARPU (NT$)", "expression": "SUM(metrics[arpu])", "formatString": "\"NT$\" #,0.00" },
+          { "name": "LTV (NT$)", "expression": "SUM(metrics[ltv])", "formatString": "\"NT$\" #,0" },
+          { "name": "ARR (NT$)", "expression": "SUM(metrics[arr])", "formatString": "\"NT$\" #,0" },
+          { "name": "Active Customers", "expression": "SUM(metrics[active_customers])", "formatString": "#,0" },
+          { "name": "Monthly Churn Rate", "expression": "SUM(metrics[monthly_churn_rate])", "formatString": "0.00%" },
+          { "name": "Avg Lifetime (months)", "expression": "SUM(metrics[avg_lifetime_months])", "formatString": "0.0" }
+        ],
+        "partitions": [
+          {
+            "name": "metrics",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\Daniel\\churn-prediction-engine\\powerbi\\ChurnEngine\\data\\metrics.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"as_of_date\", type date}, {\"active_customers\", Int64.Type}, {\"mrr\", type number}, {\"arpu\", type number}, {\"monthly_churn_rate\", type number}, {\"avg_lifetime_months\", type number}, {\"ltv\", type number}, {\"arr\", type number}, {\"computed_at\", type datetime}})",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "mrr_monthly",
+        "columns": [
+          { "name": "month", "dataType": "dateTime", "sourceColumn": "month", "formatString": "yyyy-mm", "summarizeBy": "none" },
+          { "name": "active_customers", "dataType": "int64", "sourceColumn": "active_customers", "summarizeBy": "sum" },
+          { "name": "mrr", "dataType": "double", "sourceColumn": "mrr", "summarizeBy": "sum" },
+          { "name": "arpu", "dataType": "double", "sourceColumn": "arpu", "summarizeBy": "average" },
+          { "name": "mrr_mom_change", "dataType": "double", "sourceColumn": "mrr_mom_change", "summarizeBy": "sum" },
+          { "name": "mrr_mom_pct", "dataType": "double", "sourceColumn": "mrr_mom_pct", "summarizeBy": "average" }
+        ],
+        "partitions": [
+          {
+            "name": "mrr_monthly",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\Daniel\\churn-prediction-engine\\powerbi\\ChurnEngine\\data\\mrr_monthly.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"month\", type date}, {\"active_customers\", Int64.Type}, {\"mrr\", type number}, {\"arpu\", type number}, {\"mrr_mom_change\", type number}, {\"mrr_mom_pct\", type number}})",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "cohort_retention",
+        "columns": [
+          { "name": "cohort_month", "dataType": "dateTime", "sourceColumn": "cohort_month", "formatString": "yyyy-mm", "summarizeBy": "none" },
+          { "name": "month_offset", "dataType": "int64", "sourceColumn": "month_offset", "summarizeBy": "none" },
+          { "name": "active_customers", "dataType": "int64", "sourceColumn": "active_customers", "summarizeBy": "sum" },
+          { "name": "cohort_size", "dataType": "int64", "sourceColumn": "cohort_size", "summarizeBy": "none" },
+          { "name": "retention_pct", "dataType": "double", "sourceColumn": "retention_pct", "summarizeBy": "average" }
+        ],
+        "partitions": [
+          {
+            "name": "cohort_retention",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\Daniel\\churn-prediction-engine\\powerbi\\ChurnEngine\\data\\cohort_retention.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"cohort_month\", type date}, {\"month_offset\", Int64.Type}, {\"active_customers\", Int64.Type}, {\"cohort_size\", Int64.Type}, {\"retention_pct\", type number}})",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "churn_by_segment",
+        "columns": [
+          { "name": "segment_type", "dataType": "string", "sourceColumn": "segment_type", "summarizeBy": "none" },
+          { "name": "segment", "dataType": "string", "sourceColumn": "segment", "summarizeBy": "none" },
+          { "name": "labeled", "dataType": "int64", "sourceColumn": "labeled", "summarizeBy": "sum" },
+          { "name": "churned", "dataType": "int64", "sourceColumn": "churned", "summarizeBy": "sum" },
+          { "name": "churn_pct", "dataType": "double", "sourceColumn": "churn_pct", "summarizeBy": "average" }
+        ],
+        "partitions": [
+          {
+            "name": "churn_by_segment",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\Daniel\\churn-prediction-engine\\powerbi\\ChurnEngine\\data\\churn_by_segment.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"segment_type\", type text}, {\"segment\", type text}, {\"labeled\", Int64.Type}, {\"churned\", Int64.Type}, {\"churn_pct\", type number}})",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "risk_distribution",
+        "columns": [
+          { "name": "band", "dataType": "int64", "sourceColumn": "band", "summarizeBy": "none" },
+          { "name": "score_lo", "dataType": "int64", "sourceColumn": "score_lo", "summarizeBy": "none" },
+          { "name": "score_hi", "dataType": "int64", "sourceColumn": "score_hi", "summarizeBy": "none" },
+          { "name": "customers", "dataType": "int64", "sourceColumn": "customers", "summarizeBy": "sum" },
+          { "name": "avg_churn_prob", "dataType": "double", "sourceColumn": "avg_churn_prob", "summarizeBy": "average" },
+          { "name": "pct_of_base", "dataType": "double", "sourceColumn": "pct_of_base", "summarizeBy": "sum" }
+        ],
+        "measures": [
+          { "name": "Scored Customers", "expression": "SUM(risk_distribution[customers])", "formatString": "#,0" },
+          { "name": "High-Risk Customers (80+)", "expression": "CALCULATE(SUM(risk_distribution[customers]), risk_distribution[score_lo] >= 80)", "formatString": "#,0" }
+        ],
+        "partitions": [
+          {
+            "name": "risk_distribution",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\Daniel\\churn-prediction-engine\\powerbi\\ChurnEngine\\data\\risk_distribution.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"band\", Int64.Type}, {\"score_lo\", Int64.Type}, {\"score_hi\", Int64.Type}, {\"customers\", Int64.Type}, {\"avg_churn_prob\", type number}, {\"pct_of_base\", type number}})",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "revenue_at_risk",
+        "columns": [
+          { "name": "band", "dataType": "int64", "sourceColumn": "band", "summarizeBy": "none" },
+          { "name": "score_lo", "dataType": "int64", "sourceColumn": "score_lo", "summarizeBy": "none" },
+          { "name": "active_customers", "dataType": "int64", "sourceColumn": "active_customers", "summarizeBy": "sum" },
+          { "name": "mrr_in_band", "dataType": "double", "sourceColumn": "mrr_in_band", "summarizeBy": "sum" },
+          { "name": "expected_monthly_revenue_at_risk", "dataType": "double", "sourceColumn": "expected_monthly_revenue_at_risk", "summarizeBy": "sum" }
+        ],
+        "measures": [
+          { "name": "Revenue at Risk (NT$/mo)", "expression": "SUM(revenue_at_risk[expected_monthly_revenue_at_risk])", "formatString": "\"NT$\" #,0" },
+          { "name": "MRR Covered (NT$)", "expression": "SUM(revenue_at_risk[mrr_in_band])", "formatString": "\"NT$\" #,0" }
+        ],
+        "partitions": [
+          {
+            "name": "revenue_at_risk",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\Daniel\\churn-prediction-engine\\powerbi\\ChurnEngine\\data\\revenue_at_risk.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"band\", Int64.Type}, {\"score_lo\", Int64.Type}, {\"active_customers\", Int64.Type}, {\"mrr_in_band\", type number}, {\"expected_monthly_revenue_at_risk\", type number}})",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "high_risk_customers",
+        "columns": [
+          { "name": "msno", "dataType": "string", "sourceColumn": "msno", "summarizeBy": "none" },
+          { "name": "risk_score", "dataType": "int64", "sourceColumn": "risk_score", "summarizeBy": "none" },
+          { "name": "churn_prob", "dataType": "double", "sourceColumn": "churn_prob", "summarizeBy": "none" },
+          { "name": "city", "dataType": "int64", "sourceColumn": "city", "summarizeBy": "none" },
+          { "name": "gender", "dataType": "string", "sourceColumn": "gender", "summarizeBy": "none" },
+          { "name": "days_to_expiry", "dataType": "int64", "sourceColumn": "days_to_expiry", "summarizeBy": "none" },
+          { "name": "tenure_days", "dataType": "int64", "sourceColumn": "tenure_days", "summarizeBy": "none" },
+          { "name": "auto_renew_share", "dataType": "double", "sourceColumn": "auto_renew_share", "summarizeBy": "none" },
+          { "name": "total_paid", "dataType": "double", "sourceColumn": "total_paid", "summarizeBy": "none" }
+        ],
+        "partitions": [
+          {
+            "name": "high_risk_customers",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Csv.Document(File.Contents(\"C:\\Users\\Daniel\\churn-prediction-engine\\powerbi\\ChurnEngine\\data\\high_risk_customers.csv\"), [Delimiter=\",\", Encoding=65001, QuoteStyle=QuoteStyle.Csv]),",
+                "    Promoted = Table.PromoteHeaders(Source, [PromoteAllScalars=true]),",
+                "    Typed = Table.TransformColumnTypes(Promoted, {{\"msno\", type text}, {\"risk_score\", Int64.Type}, {\"churn_prob\", type number}, {\"city\", Int64.Type}, {\"gender\", type text}, {\"days_to_expiry\", Int64.Type}, {\"tenure_days\", Int64.Type}, {\"auto_renew_share\", type number}, {\"total_paid\", type number}})",
+                "in",
+                "    Typed"
+              ]
+            }
+          }
+        ]
+      }
+    ],
+    "annotations": [
+      { "name": "PBI_QueryOrder", "value": "[\"metrics\",\"mrr_monthly\",\"cohort_retention\",\"churn_by_segment\",\"risk_distribution\",\"revenue_at_risk\",\"high_risk_customers\"]" }
+    ]
+  }
+}
