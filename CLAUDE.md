@@ -73,11 +73,11 @@ churn-prediction-engine/
 - [x] **1–100 risk score** — well-calibrated (band 1 → 2.2% actual churn, band 10 → 94.8%).
 - [x] Scores written to `customer_risk_scores(msno, churn_prob, risk_score, scored_at)` for all 2,391,675 customers.
 
-### Phase 4: API Layer — `[ ] Pending`
-- [ ] Build a lightweight **FastAPI** app exposing read-only endpoints (e.g., `/metrics`, `/customers/high-risk`, `/customers/{id}`).
-- [ ] Serve via a service layer so the **raw DB is never directly exposed**; return curated DTOs only.
-- [ ] Add input validation (Pydantic), pagination, and basic error handling.
-- [ ] Document with the auto-generated OpenAPI/Swagger UI.
+### Phase 4: API Layer — `[x] Complete`
+- [x] **FastAPI** app (`src/api/main.py`): `/metrics`, `/customers/high-risk`, `/customer?msno=`, plus `/`, `/health`. Run: `uvicorn src.api.main:app --port 8000`.
+- [x] Service layer (`src/api/service.py`) — only place touching the DB; parameterized SQL, raw schema never exposed.
+- [x] Pydantic DTOs (`src/api/schemas.py`); pagination (`limit`/`offset`/`min_score`); 404 + 422 + 503 handling. CAC handled per **Option A** (`/metrics?cac=` → LTV:CAC, no fabricated value).
+- [x] OpenAPI/Swagger at `/docs` + `/openapi.json` (verified 200). All endpoints tested live.
 
 ### Phase 5: BI Preparation — `[ ] Pending`
 - [ ] Author advanced **SQL** in `sql/` using **CTEs and window functions** (cohort retention, rolling MRR, churn-by-segment, risk distribution).
@@ -115,4 +115,5 @@ churn-prediction-engine/
 - _Dataset locked in (2026-06-18): **KKBox Churn Prediction Challenge**. Multi-table — Phase 1 loader (`load_raw.py`, currently single-CSV) to be adapted for `members`/`transactions`/`train`. Awaiting user to download `members_v3`, `transactions`(+`v2`), `train`(+`v2`) from Kaggle into `data/raw/`. `user_logs` excluded by scope._
 - _**Phase 1 COMPLETE (2026-06-18).** KKBox CSVs downloaded + extracted; Postgres 16 up via Docker; `load_raw.py` loads 3 verbatim staging tables via `COPY` — row counts verified (6.77M / 22.98M / 1.96M). Ready to begin Phase 2 (cleaning & ETL) on approval._
 - _**Phase 2 COMPLETE (2026-06-18).** Profiled raw data; built clean `customers` (2,426,143) + `transactions` (22,975,416, deduped) via SQL ETL (`src/etl/clean.py`) with PK/FK/indexes; all validation PASS; 970,960 labeled customers @ 8.99% churn. Methodology in `docs/data-cleaning.md`. Decisions: train_v2 canonical label, transacting-customer universe, null+flag dirty values. Ready for Phase 3 (metrics + ML) on approval._
-- _**Phase 3 COMPLETE (2026-06-18).** Leak-free as-of cutoff 2017-02-28 (predict March-2017 expiry cohort). Metrics: MRR NT$147.6M/mo, ARPU NT$128, LTV NT$1,424. Features `customer_features` (2,391,675×27). Random Forest (ROC-AUC 0.907, PR-AUC 0.629), isotonic-calibrated; well-calibrated 1-100 score (band 1→2.2%, band 10→94.8% actual churn) written to `customer_risk_scores`. Docs: `docs/phase3-metrics-and-model.md`. OPEN: user to pick CAC handling (A=parameterized LTV:CAC / B=omit). Ready for Phase 4 (FastAPI) on approval._
+- _**Phase 3 COMPLETE (2026-06-18).** Leak-free as-of cutoff 2017-02-28 (predict March-2017 expiry cohort). Metrics: MRR NT$147.6M/mo, ARPU NT$128, LTV NT$1,424. Features `customer_features` (2,391,675×27). Random Forest (ROC-AUC 0.907, PR-AUC 0.629), isotonic-calibrated; well-calibrated 1-100 score (band 1→2.2%, band 10→94.8% actual churn) written to `customer_risk_scores`. Docs: `docs/phase3-metrics-and-model.md`._
+- _**Phase 4 COMPLETE (2026-06-18).** FastAPI read-only API (`src/api/`): `/metrics` (+`?cac=` for LTV:CAC, Option A chosen), `/customers/high-risk` (paginated), `/customer?msno=`, `/health`, Swagger `/docs`. Service-layer isolates DB; Pydantic DTOs; 404/422/503 handled. Persisted `business_metrics` table + `ix_risk_score` index for fast serving. All endpoints tested live. Ready for Phase 5 (BI SQL) on approval._

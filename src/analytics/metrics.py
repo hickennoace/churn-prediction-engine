@@ -67,6 +67,25 @@ def main() -> None:
     avg_lifetime = 1.0 / churn_rate
     ltv = arpu * avg_lifetime
 
+    # Persist a single-row snapshot so the API can serve /metrics instantly
+    # (the live snapshot query scans millions of rows — too slow per request).
+    with engine.begin() as conn:
+        conn.execute(text("""
+            CREATE TABLE IF NOT EXISTS business_metrics (
+                as_of_date DATE PRIMARY KEY,
+                active_customers INT, mrr NUMERIC, arpu NUMERIC,
+                monthly_churn_rate NUMERIC, avg_lifetime_months NUMERIC,
+                ltv NUMERIC, arr NUMERIC, computed_at TIMESTAMP DEFAULT now())
+        """))
+        conn.execute(text("DELETE FROM business_metrics WHERE as_of_date = :d"), {"d": CUTOFF})
+        conn.execute(text("""
+            INSERT INTO business_metrics
+                (as_of_date, active_customers, mrr, arpu, monthly_churn_rate,
+                 avg_lifetime_months, ltv, arr)
+            VALUES (:d, :ac, :mrr, :arpu, :cr, :life, :ltv, :arr)
+        """), {"d": CUTOFF, "ac": active_customers, "mrr": mrr, "arpu": arpu,
+               "cr": churn_rate, "life": avg_lifetime, "ltv": ltv, "arr": mrr * 12})
+
     print(f"[metrics] As-of date            : {CUTOFF} (leak-free cutoff)")
     print(f"[metrics] Active customers       : {active_customers:,}")
     print(f"[metrics] MRR                     : NT$ {mrr:,.0f} / month")
