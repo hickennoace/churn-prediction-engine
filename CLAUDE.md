@@ -64,13 +64,14 @@ churn-prediction-engine/
 - [x] Constraints/keys/indexes: `customers` PK; `transactions` FK→customers + indexes on `msno`, `transaction_date`, `membership_expire_date`.
 - [x] Clean tables in PostgreSQL; `customers` snapshot to `data/processed/customers.parquet` (transactions kept in PG by design). All validation checks PASS.
 
-### Phase 3: Business Logic & Machine Learning — `[ ] Pending`
-- [ ] **Economic metrics:** compute **CAC**, **LTV**, and **MRR** (define formulas/assumptions explicitly).
-- [ ] Feature engineering for churn (tenure, usage trends, payment history, etc.).
-- [ ] Train a **Scikit-Learn Random Forest** classifier on historical churned vs retained customers.
-- [ ] Evaluate (precision/recall, ROC-AUC, confusion matrix); calibrate probabilities.
-- [ ] Convert predicted churn probability into a **1–100 Churn Risk Score** for active users.
-- [ ] **Write scores back** to the database (e.g., `customer_risk_scores` table with `scored_at` timestamp).
+### Phase 3: Business Logic & Machine Learning — `[x] Complete`
+> Methodology + results in [`docs/phase3-metrics-and-model.md`](docs/phase3-metrics-and-model.md).
+- [x] **Economic metrics** (`src/analytics/metrics.py`): MRR NT$147.6M/mo, ARPU NT$128, LTV NT$1,424 (as of 2017-02-28). **CAC** not in dataset → handled honestly (see doc §2.3; pending user pick A/B).
+- [x] Feature engineering (`src/ml/features.py`): `customer_features` (2,391,675 × 27), leak-free as of 2017-02-28.
+- [x] **Random Forest** trained (`src/ml/train_model.py`) on 968,436 labeled, isotonic-calibrated.
+- [x] Evaluation: **ROC-AUC 0.907**, PR-AUC 0.629; confusion matrix + report logged.
+- [x] **1–100 risk score** — well-calibrated (band 1 → 2.2% actual churn, band 10 → 94.8%).
+- [x] Scores written to `customer_risk_scores(msno, churn_prob, risk_score, scored_at)` for all 2,391,675 customers.
 
 ### Phase 4: API Layer — `[ ] Pending`
 - [ ] Build a lightweight **FastAPI** app exposing read-only endpoints (e.g., `/metrics`, `/customers/high-risk`, `/customers/{id}`).
@@ -114,3 +115,4 @@ churn-prediction-engine/
 - _Dataset locked in (2026-06-18): **KKBox Churn Prediction Challenge**. Multi-table — Phase 1 loader (`load_raw.py`, currently single-CSV) to be adapted for `members`/`transactions`/`train`. Awaiting user to download `members_v3`, `transactions`(+`v2`), `train`(+`v2`) from Kaggle into `data/raw/`. `user_logs` excluded by scope._
 - _**Phase 1 COMPLETE (2026-06-18).** KKBox CSVs downloaded + extracted; Postgres 16 up via Docker; `load_raw.py` loads 3 verbatim staging tables via `COPY` — row counts verified (6.77M / 22.98M / 1.96M). Ready to begin Phase 2 (cleaning & ETL) on approval._
 - _**Phase 2 COMPLETE (2026-06-18).** Profiled raw data; built clean `customers` (2,426,143) + `transactions` (22,975,416, deduped) via SQL ETL (`src/etl/clean.py`) with PK/FK/indexes; all validation PASS; 970,960 labeled customers @ 8.99% churn. Methodology in `docs/data-cleaning.md`. Decisions: train_v2 canonical label, transacting-customer universe, null+flag dirty values. Ready for Phase 3 (metrics + ML) on approval._
+- _**Phase 3 COMPLETE (2026-06-18).** Leak-free as-of cutoff 2017-02-28 (predict March-2017 expiry cohort). Metrics: MRR NT$147.6M/mo, ARPU NT$128, LTV NT$1,424. Features `customer_features` (2,391,675×27). Random Forest (ROC-AUC 0.907, PR-AUC 0.629), isotonic-calibrated; well-calibrated 1-100 score (band 1→2.2%, band 10→94.8% actual churn) written to `customer_risk_scores`. Docs: `docs/phase3-metrics-and-model.md`. OPEN: user to pick CAC handling (A=parameterized LTV:CAC / B=omit). Ready for Phase 4 (FastAPI) on approval._

@@ -126,5 +126,37 @@ Output: a `customer_features` table keyed by `msno`.
 Sanity check: ARPU (128.04) ≈ the ~130/month per-plan rate from profiling — normalization
 holds. Reusable view `v_subscription_value` created for Phase 5 BI.
 
-### 6.2 Feature engineering & model
-_(pending — next step)_
+### 6.2 Feature engineering ✅ (`python -m src.ml.features`)
+`customer_features`: **2,391,675** customers × 27 columns, **968,436 labeled**. Every
+feature derived from transactions `<= 2017-02-28` (leak-free) + static profile.
+
+### 6.3 Model ✅ (`python -m src.ml.train_model`)
+Random Forest (200 trees, `max_depth=18`, `class_weight=balanced_subsample`) on a 60/20/20
+fit/calibrate/test split; isotonic-calibrated probabilities.
+
+**Held-out test performance:**
+| Metric | Value |
+|---|---|
+| ROC-AUC | **0.907** |
+| PR-AUC | 0.629 (baseline = 0.089 churn rate → ~7× lift) |
+| Precision / Recall (churn @0.5) | 0.739 / 0.435 |
+| Accuracy | 0.936 |
+
+**Top churn drivers (feature importance) — all business-explainable:**
+`last_auto_renew` (0.155) · `days_to_expiry` (0.138) · `auto_renew_share` (0.105) ·
+`last_is_cancel` (0.072) · `recency_days` (0.065) · `avg_paid` (0.055). → *Whether the
+customer's last subscription had auto-renew on, how soon it expires, and their cancel
+history dominate.*
+
+**Score calibration (the real validation)** — actual churn by 1–100 risk band, on labeled
+customers:
+
+| Risk band | n | Actual churn |
+|---|---|---|
+| 1–10 | 809,389 | 2.2% |
+| 41–50 | 15,444 | 49.6% |
+| 71–80 | 10,082 | 76.5% |
+| 91–100 | 10,122 | **94.8%** |
+
+Monotonic and well-calibrated — the score reads ≈ churn probability. All **2,391,675**
+customers scored into `customer_risk_scores(msno, churn_prob, risk_score, scored_at)`.
