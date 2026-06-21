@@ -163,45 +163,99 @@
         "measures": [
           {
             "name": "MRR (NT$)",
+            "description": "Monthly Recurring Revenue — total predictable subscription revenue billed per month as of the snapshot date.",
+            "displayFolder": "1 Revenue",
             "expression": "SUM(metrics[mrr])",
             "formatString": "\"NT$\" #,0",
             "lineageTag": "788d4ce4-df65-4b07-82f1-60775d0a09a2"
           },
           {
             "name": "ARPU (NT$)",
+            "description": "Average Revenue Per User — MRR divided by active paying customers.",
+            "displayFolder": "1 Revenue",
             "expression": "SUM(metrics[arpu])",
             "formatString": "\"NT$\" #,0.00",
             "lineageTag": "103cf28b-fe88-49cd-85b7-99c87ce10c16"
           },
           {
             "name": "LTV (NT$)",
+            "description": "Customer Lifetime Value — ARPU times the average customer lifetime in months.",
+            "displayFolder": "1 Revenue",
             "expression": "SUM(metrics[ltv])",
             "formatString": "\"NT$\" #,0",
             "lineageTag": "2b3a6502-29bb-4b7d-ae41-20387ed5eb97"
           },
           {
             "name": "ARR (NT$)",
+            "description": "Annual Recurring Revenue — MRR annualised (x12).",
+            "displayFolder": "1 Revenue",
             "expression": "SUM(metrics[arr])",
             "formatString": "\"NT$\" #,0",
             "lineageTag": "20d5a1cf-f0d9-4f93-a19e-9dbdb25fdf9c"
           },
           {
             "name": "Active Customers",
+            "description": "Customers with an active paid subscription as of the snapshot date.",
+            "displayFolder": "2 Customers",
             "expression": "SUM(metrics[active_customers])",
             "formatString": "#,0",
             "lineageTag": "d8de531d-27b2-42e7-8c76-404efd0ad831"
           },
           {
             "name": "Monthly Churn Rate",
+            "description": "Share of active customers who cancel in a given month.",
+            "displayFolder": "2 Customers",
             "expression": "SUM(metrics[monthly_churn_rate])",
             "formatString": "0.00%",
             "lineageTag": "adb1bd1d-93e6-46b5-b6a5-337b4d594925"
           },
           {
             "name": "Avg Lifetime (months)",
+            "description": "Average number of months a customer stays subscribed.",
+            "displayFolder": "2 Customers",
             "expression": "SUM(metrics[avg_lifetime_months])",
             "formatString": "0.0",
             "lineageTag": "7c150fd9-748b-4498-9b4e-466ef015c294"
+          },
+          {
+            "name": "Peak MRR (NT$)",
+            "description": "Highest monthly recurring revenue observed across the trend.",
+            "displayFolder": "1 Revenue",
+            "expression": "MAX(mrr_monthly[mrr])",
+            "formatString": "\"NT$\" #,0",
+            "lineageTag": "c0ffee01-0001-4a1a-9001-000000000001"
+          },
+          {
+            "name": "Retention Rate",
+            "description": "Share of customers retained each month (1 − monthly churn rate).",
+            "displayFolder": "2 Customers",
+            "expression": "1 - SUM(metrics[monthly_churn_rate])",
+            "formatString": "0.0%",
+            "lineageTag": "c0ffee01-0002-4a1a-9001-000000000002"
+          },
+          {
+            "name": "Customers Lost (est. / mo)",
+            "description": "Estimated customers lost per month = active customers x monthly churn rate.",
+            "displayFolder": "2 Customers",
+            "expression": "ROUND(SUM(metrics[active_customers]) * SUM(metrics[monthly_churn_rate]), 0)",
+            "formatString": "#,0",
+            "lineageTag": "c0ffee01-0003-4a1a-9001-000000000003"
+          },
+          {
+            "name": "% Revenue Retained",
+            "description": "Scored MRR expected to be retained as a share of total scored MRR.",
+            "displayFolder": "3 Risk & Churn",
+            "expression": "DIVIDE([Revenue Retained (NT$/mo)], [MRR Covered (NT$)])",
+            "formatString": "0.0%",
+            "lineageTag": "c0ffee01-0009-4a1a-9001-000000000009"
+          },
+          {
+            "name": "Scale 100%",
+            "description": "Display constant (=1) used as the maximum for percentage gauge visuals.",
+            "displayFolder": "_Helpers",
+            "expression": "1",
+            "formatString": "0%",
+            "lineageTag": "c0ffee01-0010-4a1a-9001-000000000010"
           }
         ],
         "partitions": [
@@ -519,15 +573,35 @@
         "measures": [
           {
             "name": "Scored Customers",
+            "description": "Active customers assigned a 1-100 churn-risk score by the model.",
+            "displayFolder": "3 Risk & Churn",
             "expression": "SUM(risk_distribution[customers])",
             "formatString": "#,0",
             "lineageTag": "7f597e81-29d0-4060-970e-8633ea0cf145"
           },
           {
             "name": "High-Risk Customers (80+)",
+            "description": "Customers scoring 80 or above on the churn-risk model — the priority retention list.",
+            "displayFolder": "3 Risk & Churn",
             "expression": "CALCULATE(SUM(risk_distribution[customers]), risk_distribution[score_lo] >= 80)",
             "formatString": "#,0",
             "lineageTag": "7d5de258-586c-45a0-aae4-488a9447d1d8"
+          },
+          {
+            "name": "% High-Risk (80+)",
+            "description": "Share of scored customers that fall in the high-risk band (score 80+).",
+            "displayFolder": "3 Risk & Churn",
+            "expression": "DIVIDE([High-Risk Customers (80+)], [Scored Customers])",
+            "formatString": "0.0%",
+            "lineageTag": "c0ffee01-0004-4a1a-9001-000000000004"
+          },
+          {
+            "name": "Avg Churn Prob (High-Risk 80+)",
+            "description": "Average modelled churn probability among customers scoring 80+.",
+            "displayFolder": "3 Risk & Churn",
+            "expression": "CALCULATE(AVERAGE(risk_distribution[avg_churn_prob]), risk_distribution[score_lo] >= 80)",
+            "formatString": "0.0%",
+            "lineageTag": "c0ffee01-0005-4a1a-9001-000000000005"
           }
         ],
         "partitions": [
@@ -591,15 +665,43 @@
         "measures": [
           {
             "name": "Revenue at Risk (NT$/mo)",
+            "description": "Expected monthly recurring revenue lost = each band's MRR times its average churn probability.",
+            "displayFolder": "3 Risk & Churn",
             "expression": "SUM(revenue_at_risk[expected_monthly_revenue_at_risk])",
             "formatString": "\"NT$\" #,0",
             "lineageTag": "79d02532-558e-42cf-859f-c7cfb81e7958"
           },
           {
             "name": "MRR Covered (NT$)",
+            "description": "Total monthly recurring revenue across all scored risk bands.",
+            "displayFolder": "3 Risk & Churn",
             "expression": "SUM(revenue_at_risk[mrr_in_band])",
             "formatString": "\"NT$\" #,0",
             "lineageTag": "8c66ff1b-c969-46a5-a19d-418a2d96a4af"
+          },
+          {
+            "name": "% Revenue at Risk",
+            "description": "Expected revenue at risk as a share of total scored MRR.",
+            "displayFolder": "3 Risk & Churn",
+            "expression": "DIVIDE([Revenue at Risk (NT$/mo)], [MRR Covered (NT$)])",
+            "formatString": "0.0%",
+            "lineageTag": "c0ffee01-0006-4a1a-9001-000000000006"
+          },
+          {
+            "name": "Revenue Retained (NT$/mo)",
+            "description": "Scored MRR expected to be retained = MRR covered minus revenue at risk.",
+            "displayFolder": "3 Risk & Churn",
+            "expression": "[MRR Covered (NT$)] - [Revenue at Risk (NT$/mo)]",
+            "formatString": "\"NT$\" #,0",
+            "lineageTag": "c0ffee01-0007-4a1a-9001-000000000007"
+          },
+          {
+            "name": "Annual Revenue at Risk (NT$)",
+            "description": "Expected revenue at risk annualised (monthly figure x12).",
+            "displayFolder": "3 Risk & Churn",
+            "expression": "[Revenue at Risk (NT$/mo)] * 12",
+            "formatString": "\"NT$\" #,0",
+            "lineageTag": "c0ffee01-0008-4a1a-9001-000000000008"
           }
         ],
         "partitions": [

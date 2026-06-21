@@ -70,6 +70,9 @@ data/external/
 !powerbi/**/data/*.csv
 # Power BI local/machine-specific cache (not part of the shared project)
 **/.pbi/
+# Power BI report local backups / one-off scratch (kept locally, not shared)
+powerbi/_build_report.py
+powerbi/**/*.bak
 
 # Trained ML models / pickles
 models/
