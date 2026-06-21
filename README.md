@@ -31,6 +31,34 @@ API → BI** — and to end on a *decision*, not just a chart.
 
 ---
 
+## 📊 The dashboard
+
+The pipeline's output lands in a **4-page Power BI report** ([`powerbi/`](powerbi/)) built in the
+version-controllable **PBIP / TMDL** format — ~20 documented DAX measures, a custom theme, and one
+consistent design system across every page. It's the part a decision-maker actually reads.
+
+#### 1 · Executive Summary — top-line health at a glance
+![Executive Summary — five KPIs, MRR growth curve, key insights, and risk teasers](docs/images/dashboard-1-executive-summary.png)
+Five headline KPIs (MRR, active customers, retention, % revenue retained, revenue at risk), the MRR
+growth curve, an at-a-glance **Key Insights** panel, and the two risk charts that set up page 4.
+
+#### 2 · Revenue & Customers — the SaaS economics
+![Revenue & Customers — ARPU/LTV/ARR cards, MRR trend, and active-customer growth](docs/images/dashboard-2-revenue-customers.png)
+ARPU / LTV / ARR up top, with MRR growth beside the active-customer base — the average customer pays
+**~NT$128/month** and stays **~11 months** (**~NT$1,424** lifetime).
+
+#### 3 · Why Customers Leave — the churn drivers
+![Why Customers Leave — segment slicer, churn-by-segment bars, and a cohort-retention heatmap](docs/images/dashboard-3-why-customers-leave.png)
+Slice churn by segment and read **cohort retention as a heatmap** (rows = signup month, columns =
+months since signup). The standout signal: **manual-pay customers churn 37% vs 5% on auto-renew**.
+
+#### 4 · Who's At Risk — where the money is
+![Who's At Risk — revenue-at-risk and customer counts by score band, plus a ranked outreach table](docs/images/dashboard-4-whos-at-risk.png)
+Expected **revenue-at-risk** and customer counts by **1–100 risk band**, plus a ranked table of the
+exact customers to contact first — the riskiest band alone holds **~NT$13.8M/month**.
+
+---
+
 ## 🏗️ Architecture
 
 ```mermaid
